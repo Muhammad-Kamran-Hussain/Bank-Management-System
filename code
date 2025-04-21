@@ -1,0 +1,101 @@
+import sys
+
+class BankAccount:
+    account_counter = 1001
+
+    def __init__(self, name):
+        self.account_id = BankAccount.account_counter
+        self.name = name
+        self.balance = 0.0
+        BankAccount.account_counter += 1
+
+    def deposit(self, amount):
+        if amount > 0:
+            self.balance += amount
+            print(f"\n✅ Deposited ${amount:.2f}. New Balance: ${self.balance:.2f}")
+        else:
+            print("❌ Invalid deposit amount.")
+
+    def withdraw(self, amount):
+        if amount <= 0:
+            print("❌ Invalid withdrawal amount.")
+        elif amount > self.balance:
+            print("❌ Insufficient balance.")
+        else:
+            self.balance -= amount
+            print(f"\n✅ Withdrew ${amount:.2f}. New Balance: ${self.balance:.2f}")
+
+    def display_info(self):
+        print(f"\n📄 Account ID: {self.account_id}\n👤 Name: {self.name}\n💰 Balance: ${self.balance:.2f}")
+
+
+class BankSystem:
+    def __init__(self):
+        self.accounts = {}
+
+    def create_account(self):
+        name = input("Enter your name: ").strip()
+        account = BankAccount(name)
+        self.accounts[account.account_id] = account
+        print(f"\n🎉 Account created successfully! Your Account ID is {account.account_id}")
+
+    def get_account(self):
+        try:
+            acc_id = int(input("Enter your Account ID: "))
+            return self.accounts.get(acc_id)
+        except ValueError:
+            print("❌ Invalid Account ID.")
+            return None
+
+    def deposit_money(self):
+        account = self.get_account()
+        if account:
+            try:
+                amount = float(input("Enter amount to deposit: "))
+                account.deposit(amount)
+            except ValueError:
+                print("❌ Invalid amount.")
+
+    def withdraw_money(self):
+        account = self.get_account()
+        if account:
+            try:
+                amount = float(input("Enter amount to withdraw: "))
+                account.withdraw(amount)
+            except ValueError:
+                print("❌ Invalid amount.")
+
+    def display_account_info(self):
+        account = self.get_account()
+        if account:
+            account.display_info()
+
+    def run(self):
+        while True:
+            print("\n===== 🏦 Bank Management System =====")
+            print("1. Create Account")
+            print("2. Deposit Money")
+            print("3. Withdraw Money")
+            print("4. View Account Details")
+            print("5. Exit")
+
+            choice = input("\nChoose an option (1-5): ")
+
+            if choice == '1':
+                self.create_account()
+            elif choice == '2':
+                self.deposit_money()
+            elif choice == '3':
+                self.withdraw_money()
+            elif choice == '4':
+                self.display_account_info()
+            elif choice == '5':
+                print("\n👋 Thank you for using the Bank Management System!")
+                sys.exit()
+            else:
+                print("❌ Invalid option. Please try again.")
+
+
+if __name__ == "__main__":
+    bank_system = BankSystem()
+    bank_system.run()
